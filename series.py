@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*- 
-
-# Los directorios donde se encuentran las series
 directorios = \
+
 r'''
-D:\Series
+D:/Series
 '''.split('\n')
 
-# Directorio donde vas a alojar la web
-web_path = ''
 
-# Traducción para algunos géneros
+'''
+    Traducción para algunos géneros
+'''
 gen = {
     'Crime':        u'Crimen',
     'Action':       u'Acción',
@@ -57,9 +56,13 @@ html_serie_finrow = '''</div>'''
 html_season = u'''<a href='#'>%s</a>'''
 
 html_footer = u'''<footer class="footer"></footer></div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   </body></html>'''
 
 
@@ -72,7 +75,7 @@ def series_links(d):
         1x01, S01E03, 101...
     '''
     path = d[u'path']
-    patterns = [ \
+    patterns = patterns = [ \
         # Del tipo: 1x01, 12x24
         '(\d{1,2}x\d\d)', 
         
@@ -120,6 +123,8 @@ def series_links(d):
     return capitulos
                 
                     
+            
+
 
 def serie_HTML(d, download=False):
     ''' Devuelve el HTML para una determinada serie '''
@@ -132,7 +137,7 @@ def serie_HTML(d, download=False):
         temporadas  = u' '.join( [html_season % idx for idx in xrange(1,d[u'seasons']+1)]),
         masinfo     = u'',
         toggle      = d[u'name'].decode('utf-8', 'replace').split(' ')[0],
-        enlaces     = u'\n'.join( [(u'<a href="file:///%s">%s</a>' % (cap[1],cap[0])) for cap in series_links(d)])
+        enlaces     = u'<br>'.join( [(u'<a href="file:///%s">%s</a>' % (cap[1], cap[0])) for cap in series_links(d)])
         )
 
 ##############################################################################
@@ -164,7 +169,6 @@ def paths_de_las_series(orden=lambda (p,d): d[u'name']):
                     
     return sorted(paths, key=orden)
 
-''' Convierte una string en utf-8 '''
 utf = lambda x: x.decode('utf-8', 'replace')
 
 def urlify(name):
@@ -185,12 +189,12 @@ def download_image(d):
     fName = urlify(d[u'name'])
     
     # Comprueba si ya está descargada
-    if ('%s.jpg' % fName) in ls('%s/imgs/' % web_path):
+    if ('%s.jpg' % fName) in ls('D:/Series/_web/imgs/'):
         pass
     else:
         call("wget %s -O %s.jpg" % (d[u'poster'][u'large'], fName) )
         sleep(2)
-        mv('%s.jpg' % fName, '%s/imgs/%s.jpg' % (web_path, fName))
+        mv('%s.jpg' % fName, 'D:/Series/_web/imgs/%s.jpg' % fName)
     return fName
     
 ##############################################################################
@@ -227,7 +231,6 @@ if __name__=='__main__':
     html += html_footer
 
     ''' Guardamos el HTML '''
-    location = r'%s/index.html' % web_path
+    location = r'./_web/index.html'
     with open(location, 'w', 'utf-8') as f:
         f.write(html)
-  
